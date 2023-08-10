@@ -447,6 +447,7 @@
         - 'chromadb.db.duckdb'
         - 'chromadb.db.impl.sqlite'
         - 'chromadb.api.segment'
+        - 'chromadb.api.fastapi'
         - 'chromadb.segment.impl.manager.local'
         - 'chromadb.segment.impl.metadata.sqlite'
         - 'chromadb.migrations.embeddings_queue'
