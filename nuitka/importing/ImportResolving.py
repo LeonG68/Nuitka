@@ -20,6 +20,7 @@
 """
 
 from nuitka.__past__ import unicode
+from nuitka.Options import isExperimental
 from nuitka.PythonVersions import python_version
 from nuitka.utils.ModuleNames import ModuleName
 
@@ -154,5 +155,17 @@ def resolveModuleName(module_name):
     elif module_name in _six_moves:
         # six moves replicated
         return ModuleName(_six_moves[module_name])
+    elif (
+        module_name == "importlib_metadata"
+        and python_version >= 0x380
+        and isExperimental("eliminate-backports")
+    ):
+        return ModuleName("importlib.metadata")
+    elif (
+        module_name == "importlib_resources"
+        and python_version >= 0x390
+        and isExperimental("eliminate-backports")
+    ):
+        return ModuleName("importlib.resources")
     else:
         return module_name
