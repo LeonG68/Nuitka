@@ -49,10 +49,30 @@ static PyObject *_Nuitka_ResourceReaderFiles_GetPath(PyThreadState *tstate,
     PyObject *is_abs = OS_PATH_ISABS(tstate, files->m_path);
     PyObject *result;
     if (is_abs == Py_True) {
+#if 0
+        PRINT_STRING("Getting path from absolute: ");
+        PRINT_ITEM(files->m_path);
+        PRINT_NEW_LINE();
+#endif
+
         result = files->m_path;
         Py_INCREF(result);
     } else {
-        result = JOIN_PATH2(getModuleDirectory(files->m_loader_entry), files->m_path);
+        result = getModuleDirectory(files->m_loader_entry);
+
+#if 0
+        PRINT_STRING("Getting path from relative: ");
+        PRINT_ITEM(result);
+        PRINT_STRING(" ");
+        PRINT_ITEM(files->m_path);
+        PRINT_NEW_LINE();
+#endif
+
+        if (files->m_path != const_str_empty) {
+            PyObject *old = result;
+            result = JOIN_PATH2(result, files->m_path);
+            Py_DECREF(old);
+        }
     }
 
     Py_DECREF(is_abs);
@@ -420,7 +440,10 @@ static PyObject *Nuitka_ResourceReaderFiles_get_name(struct Nuitka_ResourceReade
     PyThreadState *tstate = PyThreadState_GET();
 
     PyObject *file_name = _Nuitka_ResourceReaderFiles_GetPath(tstate, files);
-    return file_name;
+    PyObject *result = OS_PATH_BASENAME(tstate, file_name);
+    Py_DECREF(file_name);
+
+    return result;
 }
 
 static int Nuitka_ResourceReaderFiles_set_name(struct Nuitka_FunctionObject *files, PyObject *value) {
