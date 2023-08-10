@@ -130,6 +130,8 @@ _six_moves = {
 def resolveModuleName(module_name):
     """Resolve a module name to its real module name."""
 
+    # return driven, pylint: disable=too-many-return-statements
+
     # TODO: This is not handling decoding errors all that well.
     if str is not unicode and type(module_name) is unicode:
         module_name = str(module_name)
